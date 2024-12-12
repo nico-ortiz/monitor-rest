@@ -1,4 +1,4 @@
-package com.monitor.rest.model.entity;
+package com.monitor.rest.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -32,7 +32,7 @@ public class Plant {
 
     private int numberOfDisabledSensors;
 
-    @ManyToOne()
+    @ManyToOne
     @JoinColumn(name = "monitored_by")
     private User user;
 }
