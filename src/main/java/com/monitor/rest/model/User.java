@@ -1,4 +1,4 @@
-package com.monitor.rest.model.entity;
+package com.monitor.rest.model;
 
 import java.util.Set;
 
