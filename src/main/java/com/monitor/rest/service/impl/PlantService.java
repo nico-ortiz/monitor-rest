@@ -27,6 +27,7 @@ public class PlantService implements IPlantService {
 
     @Override
     public PlantResponse createPlant(PlantRequest plant) {
+        validator.validate(plant);
         Optional<Plant> optionalPlant = plantRepository.findByNameAndCountry(plant.getName(), plant.getCountry());
 
         //Exists plant with name and country

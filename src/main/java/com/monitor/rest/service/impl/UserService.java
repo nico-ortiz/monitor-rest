@@ -63,6 +63,7 @@ public class UserService implements IUserService {
      */
     @Override
     public UserResponse updateUser(Long userId, UserRequest user) {
+        validator.validate(user);
         Optional<User> optionalUser = userRepository.findById(userId);
 
         if (!optionalUser.isPresent()) {
