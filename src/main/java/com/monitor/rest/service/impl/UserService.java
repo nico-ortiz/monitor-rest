@@ -1,11 +1,14 @@
 package com.monitor.rest.service.impl;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.monitor.rest.dto.plant.PlantResponse;
 import com.monitor.rest.dto.user.UserRequest;
 import com.monitor.rest.dto.user.UserResponse;
+import com.monitor.rest.dto.user.UserWithPlants;
 import com.monitor.rest.mapper.UserMapper;
 import com.monitor.rest.model.User;
 import com.monitor.rest.repository.UserRepository;
@@ -88,14 +91,15 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public User getUserWithPlants(Long userId) {
-        Optional<User> optionalUser = userRepository.findById(userId);
+    public List<PlantResponse> getUserWithPlants(Long userId) {
+        Optional<User> user = userRepository.findById(userId);
 
-        if (!optionalUser.isPresent()) {
-            return new User();
+        if (!user.isPresent()) {
+            return null;
         }
         
-        return optionalUser.get();
+        UserWithPlants userWithPlants = userMapper.toUserWithPlants(user.get());
+        return userWithPlants.getPlants();
     }
     
 }

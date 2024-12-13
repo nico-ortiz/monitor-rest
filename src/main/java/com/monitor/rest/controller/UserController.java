@@ -3,12 +3,15 @@ package com.monitor.rest.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.monitor.rest.dto.plant.PlantResponse;
 import com.monitor.rest.dto.user.UserRequest;
 import com.monitor.rest.dto.user.UserResponse;
-import com.monitor.rest.model.User;
 import com.monitor.rest.service.IUserService;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 @AllArgsConstructor
 @RestController
 @RequestMapping("/users")
+@Slf4j
 public class UserController {
     
     private IUserService userService;
@@ -76,14 +80,14 @@ public class UserController {
     }
 
     @GetMapping("/{userId}/plants")
-    public ResponseEntity<User> getUserWithPlants(@PathVariable Long userId) {
-        User user = userService.getUserWithPlants(userId);
+    public ResponseEntity<List<PlantResponse>> getUserWithPlants(@PathVariable Long userId) {
+        List<PlantResponse> plants = userService.getUserWithPlants(userId);
 
-        if (user.getId() == null) {
+        if (plants == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        return new ResponseEntity<>(user, HttpStatus.OK);     
+        return new ResponseEntity<>(plants, HttpStatus.OK);     
     }
     
 }

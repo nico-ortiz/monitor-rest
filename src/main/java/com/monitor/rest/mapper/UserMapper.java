@@ -7,9 +7,13 @@ import org.mapstruct.factory.Mappers;
 
 import com.monitor.rest.dto.user.UserRequest;
 import com.monitor.rest.dto.user.UserResponse;
+import com.monitor.rest.dto.user.UserWithPlants;
 import com.monitor.rest.model.User;
 
-@Mapper(componentModel = "spring")
+@Mapper(
+    componentModel = "spring",
+    uses = {PlantMapper.class}
+)
 public interface UserMapper {
     
     UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
@@ -29,4 +33,7 @@ public interface UserMapper {
 
     @Mapping(target = "userId", source = "id")
     UserResponse toUserResponse(User user);
+
+    @Mapping(target = "userId", source = "id")
+    UserWithPlants toUserWithPlants(User user);
 }

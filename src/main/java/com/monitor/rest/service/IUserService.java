@@ -1,8 +1,10 @@
 package com.monitor.rest.service;
 
+import java.util.List;
+
+import com.monitor.rest.dto.plant.PlantResponse;
 import com.monitor.rest.dto.user.UserRequest;
 import com.monitor.rest.dto.user.UserResponse;
-import com.monitor.rest.model.User;
 
 public interface IUserService {
     
@@ -16,5 +18,5 @@ public interface IUserService {
 
     UserResponse deleteUserById(Long userId);
 
-    User getUserWithPlants(Long userId);
+    List<PlantResponse> getUserWithPlants(Long userId);
 }
