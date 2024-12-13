@@ -10,7 +10,7 @@ import com.monitor.rest.model.Plant;
 @Repository
 public interface PlantRepository extends JpaRepository<Plant, Long> {
     
-    Optional<Plant> findByNameAndCountry(String name, String country);
+    Optional<Plant> findByNameIgnoreCaseAndCountry(String name, String country);
 
     Optional<Plant> findByName(String name);
 }

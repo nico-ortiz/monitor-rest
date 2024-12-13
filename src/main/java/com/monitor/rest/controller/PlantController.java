@@ -14,7 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.monitor.rest.dto.plant.PlantRequest;
 import com.monitor.rest.dto.plant.PlantResponse;
 import com.monitor.rest.dto.plant.PlantWithUser;
+import com.monitor.rest.exception.DuplicateKeyException;
+import com.monitor.rest.exception.NotFoundException;
 import com.monitor.rest.service.IPlantService;
+import com.monitor.rest.validator.ObjectsValidator;
 
 import lombok.AllArgsConstructor;
 
@@ -25,12 +28,15 @@ public class PlantController {
     
     private IPlantService plantService;
 
+    private ObjectsValidator validator;
+
     @PostMapping("/create")
     public ResponseEntity<PlantResponse> createPlant(@RequestBody PlantRequest request) {
+        validator.validate(request);
         PlantResponse plant = plantService.createPlant(request);
 
         if (plant.getPlantId() == null) {
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
+            throw new DuplicateKeyException("Planta con nombre y pais existente");
         }
 
         return new ResponseEntity<>(plant, HttpStatus.CREATED);
@@ -41,7 +47,7 @@ public class PlantController {
         PlantResponse plantResponse = plantService.getPlantById(plantId);
 
         if (plantResponse.getPlantId() == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            throw new NotFoundException("Planta con id=" + plantId + " no encontrada");
         }
 
         return new ResponseEntity<>(plantResponse, HttpStatus.OK);
@@ -52,7 +58,7 @@ public class PlantController {
         PlantWithUser plantResponse = plantService.getAllInfoPlant(plantId);
 
         if (plantResponse.getId() == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            throw new NotFoundException("Planta con id=" + plantId + " no encontrada");
         }
 
         return new ResponseEntity<>(plantResponse, HttpStatus.OK);
@@ -63,7 +69,7 @@ public class PlantController {
         PlantResponse plantResponse = plantService.getPlantByName(plantName);
 
         if (plantResponse.getPlantId() == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            throw new NotFoundException("Planta con nombre=" + plantName + " no encontrada");
         }
 
         return new ResponseEntity<>(plantResponse, HttpStatus.OK);
@@ -71,10 +77,11 @@ public class PlantController {
 
     @PutMapping("/update/{plantId}")
     public ResponseEntity<PlantResponse> updatePlant(@PathVariable Long plantId, @RequestBody PlantRequest request) {
+        validator.validate(request);
         PlantResponse plantResponse = plantService.updatePlantById(plantId, request);
         
         if (plantResponse.getPlantId() == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            throw new NotFoundException("Planta con id=" + plantId + " no encontrada");
         }
 
         return new ResponseEntity<>(plantResponse, HttpStatus.OK);
@@ -85,7 +92,7 @@ public class PlantController {
         PlantWithUser plantDeleted = plantService.deletePlantById(plantId);
 
         if (plantDeleted.getId() == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            throw new NotFoundException("Planta con id=" + plantId + " no encontrada");
         }
 
         return new ResponseEntity<>(plantDeleted, HttpStatus.OK);

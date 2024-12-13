@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.monitor.rest.dto.plant.PlantRequest;
 import com.monitor.rest.dto.plant.PlantResponse;
 import com.monitor.rest.dto.plant.PlantWithUser;
+import com.monitor.rest.exception.DuplicateKeyException;
 import com.monitor.rest.mapper.PlantMapper;
 import com.monitor.rest.model.Plant;
 import com.monitor.rest.repository.PlantRepository;
@@ -28,7 +29,7 @@ public class PlantService implements IPlantService {
     @Override
     public PlantResponse createPlant(PlantRequest plant) {
         validator.validate(plant);
-        Optional<Plant> optionalPlant = plantRepository.findByNameAndCountry(plant.getName(), plant.getCountry());
+        Optional<Plant> optionalPlant = plantRepository.findByNameIgnoreCaseAndCountry(plant.getName(), plant.getCountry());
 
         //Exists plant with name and country
         if (optionalPlant.isPresent()) {
@@ -87,6 +88,12 @@ public class PlantService implements IPlantService {
 
         validator.validate(request);
         Plant plant = plantMapper.toPlant(plantToUpdate);
+
+        Optional<Plant> optionalPlant = plantRepository.findByNameIgnoreCaseAndCountry(request.getName(), request.getCountry());
+
+        if (optionalPlant.isPresent()) {
+            throw new DuplicateKeyException("Planta con nombre y pais existente");
+        }
 
         plant.setName(request.getName());
         plant.setCountry(request.getCountry());

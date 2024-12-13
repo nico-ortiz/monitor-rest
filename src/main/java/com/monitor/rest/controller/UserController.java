@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.monitor.rest.dto.plant.PlantResponse;
 import com.monitor.rest.dto.user.UserRequest;
 import com.monitor.rest.dto.user.UserResponse;
+import com.monitor.rest.exception.NotFoundException;
 import com.monitor.rest.service.IUserService;
 
 import lombok.AllArgsConstructor;
@@ -40,7 +41,7 @@ public class UserController {
         UserResponse user = userService.getUserById(userId);
 
         if (user.getUserId() == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            throw new NotFoundException("Usuario con id="+ userId + " no encontrado");
         }
 
         return new ResponseEntity<>(user, HttpStatus.OK);
@@ -51,18 +52,18 @@ public class UserController {
         UserResponse user = userService.getUserByEmail(userEmail);
 
         if (user.getUserId() == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            throw new NotFoundException("Usuario con email="+ userEmail + " no encontrado");
         }
 
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
     
     @PutMapping("/update/{userId}")
-    public ResponseEntity<UserResponse> updateUserById(@PathVariable Long userId, @RequestBody UserRequest request) {
+    public ResponseEntity<UserResponse> updateUserById(@PathVariable Long userId, @RequestBody UserRequest request) throws NotFoundException {
         UserResponse user = userService.updateUser(userId, request);
 
         if (user.getUserId() == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            throw new NotFoundException("Usuario con id="+ userId + " no encontrado");
         }
 
         return new ResponseEntity<>(user, HttpStatus.OK);
@@ -73,7 +74,7 @@ public class UserController {
         UserResponse user = userService.deleteUserById(userId);
 
         if (user.getUserId() == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            throw new NotFoundException("Usuario con id="+ userId + " no encontrado");
         }
 
         return new ResponseEntity<>(user, HttpStatus.OK); 
@@ -84,7 +85,7 @@ public class UserController {
         List<PlantResponse> plants = userService.getUserWithPlants(userId);
 
         if (plants == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            throw new NotFoundException("Usuario con id="+ userId + " no encontrado");
         }
 
         return new ResponseEntity<>(plants, HttpStatus.OK);     
