@@ -80,18 +80,17 @@ public class PlantService implements IPlantService {
 
     @Override
     public PlantResponse updatePlantById(Long plantId, PlantRequest request) {
-        PlantResponse plantToUpdate = getPlantById(plantId);
+        Optional<Plant> plantToUpdate = plantRepository.findById(plantId);
 
-        if (plantToUpdate.getPlantId() == null) {
+        if (!plantToUpdate.isPresent()) {
             return new PlantResponse();
         }
 
         validator.validate(request);
-        Plant plant = plantMapper.toPlant(plantToUpdate);
-
+        Plant plant = plantToUpdate.get();
         Optional<Plant> optionalPlant = plantRepository.findByNameIgnoreCaseAndCountry(request.getName(), request.getCountry());
 
-        if (optionalPlant.isPresent()) {
+        if (optionalPlant.isPresent() && (!plant.getName().equals(request.getName())) && !plant.getCountry().equals(request.getCountry())) {
             throw new DuplicateKeyException("Planta con nombre y pais existente");
         }
 

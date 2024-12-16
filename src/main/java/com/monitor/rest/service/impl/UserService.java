@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import com.monitor.rest.dto.plant.PlantResponse;
+import com.monitor.rest.dto.user.TotalDataResponse;
 import com.monitor.rest.dto.user.UserRequest;
 import com.monitor.rest.dto.user.UserResponse;
 import com.monitor.rest.dto.user.UserWithPlants;
@@ -102,5 +103,19 @@ public class UserService implements IUserService {
         UserWithPlants userWithPlants = userMapper.toUserWithPlants(user.get());
         return userWithPlants.getPlants();
     }
-    
+
+    @Override
+    public TotalDataResponse getTotals(Long userId) {
+        int numberOfReadings = 0, numberOfRedAlerts = 0, numberOfMediumAlerts = 0, numberOfDisabledSensors = 0;
+        List<PlantResponse> plants = getUserWithPlants(userId);
+
+        for (PlantResponse plant: plants) {
+            numberOfReadings += plant.getReadingCount();
+            numberOfRedAlerts += plant.getNumberOfRedAlerts();
+            numberOfMediumAlerts += plant.getNumberOfMediumAlerts();
+            numberOfDisabledSensors += plant.getNumberOfDisabledSensors();
+        }
+
+        return new TotalDataResponse(numberOfReadings, numberOfRedAlerts, numberOfMediumAlerts, numberOfDisabledSensors);
+    }    
 }

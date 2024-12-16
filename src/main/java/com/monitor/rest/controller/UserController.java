@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.monitor.rest.dto.plant.PlantResponse;
+import com.monitor.rest.dto.user.TotalDataResponse;
 import com.monitor.rest.dto.user.UserRequest;
 import com.monitor.rest.dto.user.UserResponse;
 import com.monitor.rest.exception.NotFoundException;
@@ -89,6 +90,12 @@ public class UserController {
         }
 
         return new ResponseEntity<>(plants, HttpStatus.OK);     
+    }
+
+    @GetMapping("/{userId}/all-data-plants")
+    public ResponseEntity<TotalDataResponse> getTotalData(@PathVariable Long userId) {
+        TotalDataResponse totals = userService.getTotals(userId);
+        return new ResponseEntity<>(totals, HttpStatus.OK);
     }
     
 }
