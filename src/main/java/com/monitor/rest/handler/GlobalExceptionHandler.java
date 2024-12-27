@@ -4,12 +4,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.monitor.rest.exception.DuplicateKeyException;
+import com.monitor.rest.exception.InvalidCredentialsException;
 import com.monitor.rest.exception.ObjectNotValidException;
 import com.monitor.rest.exception.NotFoundException;
 
@@ -44,11 +44,11 @@ public class GlobalExceptionHandler {
             .body(getErrorsMap(exception.getMessage()));
     }
 
-    @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<?> handleObjectNotValidException(BadCredentialsException exception) {
+    @ExceptionHandler(InvalidCredentialsException.class)
+    public ResponseEntity<?> handleObjectNotValidException(InvalidCredentialsException exception) {
         return ResponseEntity
             .status(401)
-            .body(getErrorsMap(exception.getMessage()));
+            .body(getErrorsMap(exception.getErrorMessage()));
     }
     
     @ExceptionHandler(IllegalArgumentException.class)

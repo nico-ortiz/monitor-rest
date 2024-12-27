@@ -19,6 +19,8 @@ import org.springframework.stereotype.Service;
 import com.monitor.rest.dto.auth.AuthLoginRequest;
 import com.monitor.rest.dto.auth.AuthResponse;
 import com.monitor.rest.dto.user.UserRequest;
+import com.monitor.rest.exception.DuplicateKeyException;
+import com.monitor.rest.exception.InvalidCredentialsException;
 import com.monitor.rest.exception.NotFoundException;
 import com.monitor.rest.model.Role;
 import com.monitor.rest.model.User;
@@ -77,7 +79,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         Optional<User> optionalUser = userRepository.findByEmail(email);
         
         if (optionalUser.isPresent()) {
-            return new AuthResponse(email, "", false);
+            throw new DuplicateKeyException("Email="+email+" exists");
         }
 
         List<String> roleRequest = request.getAuthCreateRoleRequest().getRoleListName();
@@ -140,8 +142,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public Authentication authenticate(String email, String password) {
         UserDetails user = loadUserByUsername(email);
 
-        if (passwordEncoder.matches(password, passwordEncoder.encode(user.getPassword()))) {
-            throw new BadCredentialsException("Invalid password");
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new InvalidCredentialsException("Invalid password");
         }
 
         return new UsernamePasswordAuthenticationToken(email, user.getPassword(), user.getAuthorities());
