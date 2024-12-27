@@ -3,6 +3,7 @@ package com.monitor.rest.service.impl;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.monitor.rest.dto.plant.PlantResponse;
@@ -28,10 +29,14 @@ public class UserService implements IUserService {
 
     private final UserMapper userMapper;
 
+    private final PasswordEncoder passwordEncoder;
+
     @Override
     public UserResponse createUser(UserRequest userRequest) {
         validator.validate(userRequest);
         User user = userMapper.toUser(userRequest);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        
 
         User userSaved = userRepository.save(user);
         return userMapper.toUserResponse(userSaved);
@@ -74,7 +79,7 @@ public class UserService implements IUserService {
         User userToUpdate = optionalUser.get();
         userToUpdate.setFirstName(user.getFirstName());
         userToUpdate.setLastName(user.getLastName());
-        userToUpdate.setPassword(user.getPassword());
+        userToUpdate.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(userToUpdate);
 
         return userMapper.toUserResponse(userToUpdate);

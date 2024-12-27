@@ -20,14 +20,24 @@ public interface UserMapper {
 
     @Mappings({
         @Mapping(target = "id", ignore = true),
-        @Mapping(target = "plants", ignore = true)
+        @Mapping(target = "plants", ignore = true),
+        @Mapping(target = "isEnabled", ignore = true),
+        @Mapping(target = "accountNoExpired", ignore = true),
+        @Mapping(target = "accountNoLocked", ignore = true),
+        @Mapping(target = "credentialNoExpired", ignore = true),
+        @Mapping(target = "roles", ignore = true),
     })
     User toUser(UserRequest user);
 
     @Mappings({
         @Mapping(target = "id", source = "userId"),
         @Mapping(target = "password", ignore = true),
-        @Mapping(target = "plants", ignore = true)
+        @Mapping(target = "plants", ignore = true),
+        @Mapping(target = "isEnabled", ignore = true),
+        @Mapping(target = "accountNoExpired", ignore = true),
+        @Mapping(target = "accountNoLocked", ignore = true),
+        @Mapping(target = "credentialNoExpired", ignore = true),
+        @Mapping(target = "roles", ignore = true),
     })
     User toUser(UserResponse user);
 
