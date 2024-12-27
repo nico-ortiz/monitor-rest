@@ -1,8 +1,5 @@
-package com.monitor.rest.dto.user;
+package com.monitor.rest.dto.auth;
 
-import com.monitor.rest.dto.auth.AuthCreateRoleRequest;
-
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -13,14 +10,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserRequest {
+public class AuthLoginRequest {
     
-    @NotBlank(message = "El nombre es requerido")
-    private String firstName;
-
-    @NotBlank(message = "El apellido es requerido")
-    private String lastName;
-
     @Email(message = "El email ingresado no es válido")
     @NotBlank(message = "Es necesario un email")
     private String email;
@@ -31,7 +22,4 @@ public class UserRequest {
             regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,}$"
     )
     private String password;
-
-    @Valid
-    private AuthCreateRoleRequest authCreateRoleRequest;
 }

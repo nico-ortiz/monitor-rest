@@ -17,6 +17,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,6 +34,7 @@ public class UserController {
     private IUserService userService;
 
     @PostMapping("/register")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserResponse> registerUser(@RequestBody UserRequest request) {
         return new ResponseEntity<>(userService.createUser(request), HttpStatus.CREATED);
     }
@@ -49,7 +51,7 @@ public class UserController {
     }
 
     @GetMapping("/email/{userEmail}")
-    public ResponseEntity<UserResponse> getUserById(@PathVariable String userEmail) {
+    public ResponseEntity<UserResponse> getUserByEmail(@PathVariable String userEmail) {
         UserResponse user = userService.getUserByEmail(userEmail);
 
         if (user.getUserId() == null) {
